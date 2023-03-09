@@ -1,8 +1,15 @@
 import { type NextFunction, type Request, type Response } from "express";
 import { CustomError } from "../../CustomError/CustomError.js";
 import User from "../../database/model/User.js";
+import { type CustomJwtPayload, type UserCredentials } from "../types.js";
+import jwt from "jsonwebtoken";
+import bcryptjs from "bcryptjs";
 
-import { type UserCredentials } from "../types.js";
+const customError = new CustomError(
+  "Wrong credentials",
+  401,
+  "Wrong credentials"
+);
 
 export const loginUser = async (
   req: Request<
@@ -18,15 +25,33 @@ export const loginUser = async (
     const user = await User.findOne({ username });
 
     if (!(username && password === user?.password)) {
-      throw new Error();
+      next(customError);
+      return;
     }
 
-    res.status(200).json({ username: user?.username, name: user?.name });
+    const comparePassword = await bcryptjs.compare(password, user.password);
+
+    if (!comparePassword) {
+      next(customError);
+      return;
+    }
+
+    const jwtPayload: CustomJwtPayload = {
+      sub: user._id.toString(),
+      username: user.username,
+      name: user.name,
+    };
+
+    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, {
+      expiresIn: "2d",
+    });
+
+    res.status(200).json({ token });
   } catch (error) {
     const customError = new CustomError(
       (error as Error).message,
       401,
-      "Must provide a username or password"
+      "Wrong credentials"
     );
 
     next(customError);

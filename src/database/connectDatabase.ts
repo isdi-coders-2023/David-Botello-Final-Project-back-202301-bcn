@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
+import createDebug from "debug";
 
-const connectDatabase = async (url: string) => {
+const debug = createDebug("simoworld-api:database:connectDatabase:*");
+
+const connectDatabase = async (mongoDbUrl: string) => {
   mongoose.set("strictQuery", false);
   mongoose.set("debug", true);
   mongoose.set("toJSON", {
@@ -12,9 +15,9 @@ const connectDatabase = async (url: string) => {
   });
 
   try {
-    await mongoose.connect(url);
+    await mongoose.connect(mongoDbUrl);
   } catch (error: unknown) {
-    throw new Error((error as Error).message);
+    debug(error);
   }
 };
 
