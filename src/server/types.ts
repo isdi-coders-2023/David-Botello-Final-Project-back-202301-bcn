@@ -1,16 +1,17 @@
 import { type JwtPayload } from "jsonwebtoken";
 
-export interface UserCredentials {
-  username: string;
-  password: string;
-}
+export type UserCredentials = Pick<UserStructure, "username" | "password">;
 
 export interface UserStructure {
   email: string;
   name: string;
+  lastname: string;
+  username: string;
+  password: string;
+  admin: boolean;
 }
 
 export interface CustomJwtPayload extends JwtPayload {
   sub: string;
-  username: string;
+  name: string;
 }

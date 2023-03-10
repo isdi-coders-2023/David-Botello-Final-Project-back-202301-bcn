@@ -1,5 +1,9 @@
 import "../loadEnviroment.js";
-import express from "express";
+import express, {
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import morgan from "morgan";
 import cors from "cors";
 import usersRouter from "./usersRouter/userRouter.js";
@@ -7,6 +11,9 @@ import {
   generalError,
   notFoundError,
 } from "./middlewares/errorMiddlewares/errorMiddlewares.js";
+import { ValidationError } from "express-validation";
+import { type CustomError } from "../CustomError/CustomError.js";
+import debug from "debug";
 
 const app = express();
 
@@ -21,8 +28,8 @@ app.disable("x-powered-by");
 
 app.use(cors(options));
 
-app.use(express.json());
 app.use(morgan("dev"));
+app.use(express.json());
 
 app.use("/users", usersRouter);
 
