@@ -11,8 +11,7 @@ import {
   generalError,
   notFoundError,
 } from "./middlewares/errorMiddlewares/errorMiddlewares.js";
-import { validate, ValidationError } from "express-validation";
-import { loginSchema } from "./schema/loginSchema.js";
+import { ValidationError } from "express-validation";
 import { type CustomError } from "../CustomError/CustomError.js";
 import debug from "debug";
 
@@ -29,27 +28,10 @@ app.disable("x-powered-by");
 
 app.use(cors(options));
 
-app.use(express.json());
 app.use(morgan("dev"));
+app.use(express.json());
 
 app.use("/users", usersRouter);
-
-app.post("/login", validate(loginSchema, {}, {}), (req, res) => {
-  res.json(200);
-});
-app.use(
-  (error: CustomError, req: Request, res: Response, next: NextFunction) => {
-    if (error instanceof ValidationError) {
-      const validationErrors = error.details.body
-        ?.map((joiError) => joiError.message)
-        .join(" & ");
-      error.publicMessage = validationErrors!;
-      debug(validationErrors!);
-    }
-
-    debug(error.message);
-  }
-);
 
 app.use(notFoundError);
 app.use(generalError);

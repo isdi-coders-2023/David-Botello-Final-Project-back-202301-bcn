@@ -1,6 +1,6 @@
 import { type NextFunction, type Response, type Request } from "express";
 import createDebug from "debug";
-import { CustomError } from "../../../CustomError/CustomError";
+import { CustomError } from "../../../CustomError/CustomError.js";
 
 const debug = createDebug("simoworld-api:server:middlewares:errorMiddlewares");
 const notFoundStatusCode = 404;

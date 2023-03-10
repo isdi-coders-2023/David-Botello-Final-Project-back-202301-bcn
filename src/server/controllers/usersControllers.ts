@@ -24,21 +24,18 @@ export const loginUser = async (
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
-    if (!(username && password === user?.password)) {
-      next(customError);
-      return;
+    if (!user) {
+      throw new Error("Wrong credentials");
     }
 
     const comparePassword = await bcryptjs.compare(password, user.password);
 
     if (!comparePassword) {
-      next(customError);
-      return;
+      throw new Error("Wrong credentials");
     }
 
     const jwtPayload: CustomJwtPayload = {
       sub: user._id.toString(),
-      username: user.username,
       name: user.name,
     };
 
