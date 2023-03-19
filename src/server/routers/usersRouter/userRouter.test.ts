@@ -2,10 +2,10 @@ import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import bcryptjs, { hash } from "bcryptjs";
-import app from "../index.js";
-import connectDatabase from "../../database/connectDatabase.js";
-import User from "../../database/model/User.js";
-import { type UserStructure, type UserCredentials } from "../types.js";
+import app from "../../index.js";
+import connectDatabase from "../../../database/connectDatabase.js";
+import User from "../../../database/model/User.js";
+import { type UserStructure, type UserCredentials } from "../../types.js";
 
 let server: MongoMemoryServer;
 
