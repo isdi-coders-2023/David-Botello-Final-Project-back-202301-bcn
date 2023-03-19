@@ -14,4 +14,5 @@ export interface UserStructure {
 export interface CustomJwtPayload extends JwtPayload {
   sub: string;
   name: string;
+  admin: boolean;
 }
