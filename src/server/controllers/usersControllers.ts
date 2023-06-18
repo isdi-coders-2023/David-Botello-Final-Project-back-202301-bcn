@@ -3,7 +3,7 @@ import { CustomError } from "../../CustomError/CustomError.js";
 import User from "../../database/model/User.js";
 import { type CustomJwtPayload, type UserCredentials } from "../types.js";
 import jwt from "jsonwebtoken";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 const customError = new CustomError(
   "Wrong credentials",
@@ -28,7 +28,7 @@ export const loginUser = async (
       throw new Error("Wrong credentials");
     }
 
-    const comparePassword = await bcryptjs.compare(password, user.password);
+    const comparePassword = await bcrypt.compare(password, user.password);
 
     if (!comparePassword) {
       throw new Error("Wrong credentials");
